@@ -3,7 +3,13 @@
 
 #include <iosfwd>
 #include <stdint.h>
+#include <vector>
 
+struct big_integer;
+static big_integer negate (big_integer const x);
+static inline bool zeroCheck (big_integer &x);
+static big_integer fastMult(big_integer const &x, uint32_t y);
+inline void inverse(big_integer &a);
 struct big_integer
 {
     big_integer();
@@ -46,24 +52,17 @@ struct big_integer
     friend bool operator>=(big_integer const& a, big_integer const& b);
 
     friend std::string to_string(big_integer const& a);
-    //useful
-    friend struct tmpKeeper;
-    void negate();
-    void upgrade(big_integer&, size_t);
-    big_integer negate(big_integer const& a) const;
-    size_t size() const;
-    bool sign() const;
-private:
-    uint32_t* data_;
-    bool sign_;
-    size_t size_;
-    void swap(big_integer& a, big_integer& b);
-    big_integer& dangerAdd(big_integer const& b);
-    big_integer& dangerSub(big_integer const& b);
-    big_integer (uint32_t* buf, size_t size, bool sign);
-    void inverse(uint32_t*, size_t,bool);
-    //
+    ////
+    friend big_integer negate(big_integer const x);
+    friend bool zeroCheck(big_integer &x);
+    friend big_integer fastMult(big_integer const &x, uint32_t y);
 
+
+private:
+    void upgrade(big_integer & x,size_t size);
+    void inverse(big_integer &a);
+    std::vector<uint32_t> data_;
+    bool sign_;
 };
 
 big_integer operator+(big_integer a, big_integer const& b);
@@ -86,9 +85,10 @@ bool operator>(big_integer const& a, big_integer const& b);
 bool operator<=(big_integer const& a, big_integer const& b);
 bool operator>=(big_integer const& a, big_integer const& b);
 
+
+
 std::string to_string(big_integer const& a);
 std::ostream& operator<<(std::ostream& s, big_integer const& a);
-void mmemcpy(uint32_t* & to, uint32_t const* from, size_t size);
-//size_t checkplace(uint32_t a);
+void operator>>(std::ostream &st, big_integer &a);
 
 #endif // TRY_BIG_INTEGER_H
