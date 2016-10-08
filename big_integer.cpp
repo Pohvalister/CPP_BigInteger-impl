@@ -6,7 +6,7 @@ const static long notation= 4294967296;
 #define base  32
 
 static inline bool zeroCheck(big_integer &x){
-    while (x.data_[x.data_.size()-1]==0 && x.data_.size()!=0)
+    while (x.data_.size()!=0 && x.data_[x.data_.size()-1]==0 )
         x.data_.pop_back();
     if (x.data_.size()==0) {
         x.data_.push_back(0);
@@ -40,7 +40,7 @@ big_integer::big_integer(int a) {
     }
     data_.push_back((uint32_t)tmp);
     if ((tmp>>base) != 0) {
-        data_.push_back((uint32_t)tmp>>base);
+        data_.push_back((uint32_t)(tmp>>base));
     }
 }
 big_integer::big_integer(uint64_t a) {
@@ -49,7 +49,7 @@ big_integer::big_integer(uint64_t a) {
     sign_ = false;
     data_.push_back((uint32_t)tmp);
     if ((tmp>>base) != 0) {
-        data_.push_back((uint32_t)tmp >>base);
+        data_.push_back((uint32_t )(tmp >>base));
     }
 }
 
@@ -218,7 +218,7 @@ big_integer &big_integer::operator*=(big_integer const &rhs) {
 }
 
 
-inline void big_integer::upgrade(big_integer &x, size_t size){
+void big_integer::upgrade(big_integer &x, size_t size){
     std::reverse(x.data_.begin(),x.data_.end());
     x.data_.resize(x.data_.size()+size,0);
     std::reverse(x.data_.begin(),x.data_.end());
@@ -317,7 +317,7 @@ big_integer &big_integer::operator&=(big_integer const &rhs) {
     for (size_t i=0;i<tmpSize;i++)
         tmpData[i]=(i<this->data_.size() ? this->data_[i] : 0) & (i<save.data_.size() ? save.data_[i] : 0);
 
-    while (tmpData[tmpData.size()-1]==0&&tmpData.size()!=0){
+    while (tmpData.size()!=0&&tmpData[tmpData.size()-1]==0){
         tmpData.pop_back();
     }
     swap(this->data_,tmpData);
